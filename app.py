@@ -155,7 +155,14 @@ def comments():
 def ping():
     result = None
     if request.method == 'POST':
-        result = "[Faille 5 — Command Injection pas encore implémentée]"
+        host = request.form['host']
+        # FIX 05 — shell=False + liste d'arguments : & ; | ne sont plus
+        # interprétés par le shell, ils sont traités comme du texte brut.
+        import subprocess
+        result = subprocess.run(
+            ["ping", "-n", "1", host],
+            shell=False, capture_output=True, text=True
+        ).stdout or "Aucune réponse."
     return render_template('ping.html', result=result)
 
 
