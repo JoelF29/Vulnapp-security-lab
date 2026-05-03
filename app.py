@@ -4,6 +4,7 @@ import sqlite3
 import secrets
 
 app = Flask(__name__)
+# FIX 02 — 256 bits d'entropie : impossible à deviner ou bruteforcer.
 app.secret_key = secrets.token_hex(32)
 
 DATABASE = 'database.db'
