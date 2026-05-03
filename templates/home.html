@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Accueil{% endblock %}
+
+{% block content %}
+<h1>VulnApp — Laboratoire de Sécurité</h1>
+<p>
+  Application web intentionnellement vulnérable construite à des fins pédagogiques.
+  Chaque faille est documentée dans <code>/vulns/</code> avec son exploit et son correctif.
+</p>
+
+<hr class="divider">
+<h2>Comptes de test</h2>
+<div class="card" style="font-family: monospace; font-size: 0.88rem; color: #a0aec0;">
+  alice / password123 &nbsp;|&nbsp; bob / hunter2
+</div>
+
+<hr class="divider">
+<h2>Failles couvertes</h2>
+
+<div class="flaw-grid">
+
+  <!-- Fondations cybersécurité -->
+  <div class="flaw-card">
+    <span class="badge badge-cyber">Cybersécurité</span>
+    <h3 style="color: #f56565;">1. Injection SQL</h3>
+    <p>Formulaire de login — contourner l'authentification sans mot de passe.</p>
+  </div>
+
+  <div class="flaw-card">
+    <span class="badge badge-cyber">Cybersécurité</span>
+    <h3 style="color: #f56565;">2. Broken Authentication</h3>
+    <p>Sessions mal gérées, tokens prévisibles.</p>
+  </div>
+
+  <div class="flaw-card">
+    <span class="badge badge-cyber">Cybersécurité</span>
+    <h3 style="color: #f56565;">3. XSS</h3>
+    <p>Champ commentaire — injecter du JavaScript dans le navigateur d'un autre utilisateur.</p>
+  </div>
+
+  <div class="flaw-card">
+    <span class="badge badge-cyber">Cybersécurité</span>
+    <h3 style="color: #f56565;">4. IDOR</h3>
+    <p>Accéder au profil de n'importe quel utilisateur en changeant l'ID dans l'URL.</p>
+  </div>
+
+  <div class="flaw-card">
+    <span class="badge badge-cyber">Cybersécurité</span>
+    <h3 style="color: #f56565;">5. Command Injection</h3>
+    <p>Exécuter des commandes système arbitraires depuis l'interface web.</p>
+  </div>
+
+  <div class="flaw-card">
+    <span class="badge badge-cyber">Cybersécurité</span>
+    <h3 style="color: #f56565;">6. Upload non filtré</h3>
+    <p>Uploader un fichier malveillant accepté sans validation.</p>
+  </div>
+
+  <!-- Cloud Security -->
+  <div class="flaw-card">
+    <span class="badge badge-cloud">Cloud Security</span>
+    <h3 style="color: #b794f4;">7. Credentials AWS hardcodés</h3>
+    <p>Clés AWS exposées directement dans le code source.</p>
+  </div>
+
+  <div class="flaw-card">
+    <span class="badge badge-cloud">Cloud Security</span>
+    <h3 style="color: #b794f4;">8. Secrets dans l'environnement</h3>
+    <p>Variables d'environnement mal gérées, exposées via l'app.</p>
+  </div>
+
+  <div class="flaw-card">
+    <span class="badge badge-cloud">Cloud Security</span>
+    <h3 style="color: #b794f4;">9. SSRF</h3>
+    <p>Forcer le serveur à faire des requêtes vers des ressources internes (faille Capital One 2019).</p>
+  </div>
+
+  <div class="flaw-card">
+    <span class="badge badge-cloud">Cloud Security</span>
+    <h3 style="color: #b794f4;">10. Mauvaise config IAM</h3>
+    <p>Rôle AWS trop permissif — principe du moindre privilège violé.</p>
+  </div>
+
+  <div class="flaw-card">
+    <span class="badge badge-cloud">Cloud Security</span>
+    <h3 style="color: #b794f4;">11. Bucket S3 public</h3>
+    <p>Bucket S3 accessible publiquement sans restriction.</p>
+  </div>
+
+</div>
+{% endblock %}

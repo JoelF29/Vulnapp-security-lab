@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Profil — {{ user['username'] }}{% endblock %}
+
+{% block content %}
+<h1>Profil utilisateur</h1>
+<div class="card" style="max-width: 500px;">
+  <div class="profile-field">
+    <div class="field-label">ID</div>
+    <div class="field-value">{{ user['id'] }}</div>
+  </div>
+  <div class="profile-field">
+    <div class="field-label">Nom d'utilisateur</div>
+    <div class="field-value">{{ user['username'] }}</div>
+  </div>
+  <div class="profile-field">
+    <div class="field-label">Email</div>
+    <div class="field-value">{{ user['email'] or '—' }}</div>
+  </div>
+  <div class="profile-field">
+    <div class="field-label">Bio</div>
+    <div class="field-value">{{ user['bio'] }}</div>
+  </div>
+</div>
+
+{% if session.get('user_id') == user['id'] %}
+  <p style="font-size: 0.85rem; color: #718096; margin-top: 0.5rem;">
+    C'est ton profil.
+  </p>
+{% else %}
+  <p style="font-size: 0.85rem; color: #718096; margin-top: 0.5rem;">
+    Tu regardes le profil de quelqu'un d'autre —
+    <a href="{{ url_for('profile', user_id=session['user_id']) }}">voir le tien</a>.
+  </p>
+{% endif %}
+{% endblock %}

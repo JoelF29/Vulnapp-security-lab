@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Upload{% endblock %}
+
+{% block content %}
+<h1>Upload de fichier</h1>
+<p>Envoie un fichier sur le serveur.</p>
+
+<div class="card" style="max-width: 500px; margin-top: 1rem;">
+  <form method="POST" action="{{ url_for('upload') }}" enctype="multipart/form-data">
+    <div class="form-group">
+      <label for="file">Fichier</label>
+      <input type="file" id="file" name="file"
+             style="color: #a0aec0; padding: 0.4rem 0;">
+    </div>
+    <button type="submit">Uploader</button>
+  </form>
+
+  {% if message %}
+  <div class="alert alert-warning" style="margin-top: 1rem;">{{ message }}</div>
+  {% endif %}
+</div>
+
+<div class="alert alert-warning" style="margin-top: 1rem; max-width: 500px;">
+  Faille 6 (Upload non filtré) — pas encore implémentée.
+</div>
+{% endblock %}

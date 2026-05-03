@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Ping{% endblock %}
+
+{% block content %}
+<h1>Outil Ping réseau</h1>
+<p>Ping une adresse IP ou un nom de domaine depuis le serveur.</p>
+
+<div class="card" style="max-width: 500px; margin-top: 1rem;">
+  <form method="POST" action="{{ url_for('ping') }}">
+    <div class="form-group">
+      <label for="host">Adresse / Domaine</label>
+      <input type="text" id="host" name="host" placeholder="ex: 8.8.8.8 ou example.com">
+    </div>
+    <button type="submit">Ping</button>
+  </form>
+
+  {% if result %}
+  <div class="result-box">{{ result }}</div>
+  {% endif %}
+</div>
+
+<div class="alert alert-warning" style="margin-top: 1rem; max-width: 500px;">
+  Faille 5 (Command Injection) — pas encore implémentée.
+</div>
+{% endblock %}

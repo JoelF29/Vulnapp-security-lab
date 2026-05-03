@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VulnApp — {% block title %}Projet Éducatif{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<nav>
+  <a href="{{ url_for('home') }}" class="brand">VulnApp</a>
+  <div class="nav-links">
+    <a href="{{ url_for('comments') }}">Commentaires</a>
+    <a href="{{ url_for('ping') }}">Ping</a>
+    <a href="{{ url_for('upload') }}">Upload</a>
+    <a href="{{ url_for('aws') }}">AWS</a>
+    {% if session.get('username') %}
+      <a href="{{ url_for('profile', user_id=session['user_id']) }}">
+        {{ session['username'] }}
+      </a>
+      <a href="{{ url_for('logout') }}">Déconnexion</a>
+    {% else %}
+      <a href="{{ url_for('login') }}">Connexion</a>
+      <a href="{{ url_for('register') }}">Inscription</a>
+    {% endif %}
+  </div>
+</nav>
+
+<div class="banner">
+  ⚠️ Application volontairement vulnérable — usage éducatif uniquement — ne jamais déployer en production
+</div>
+
+<div class="container">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}AWS Config{% endblock %}
+
+{% block content %}
+<h1>Configuration AWS</h1>
+<p>Cette page affichera la configuration du compte AWS connecté.</p>
+
+<div class="card" style="margin-top: 1rem; font-family: monospace; color: #4a5568;">
+  AWS_ACCESS_KEY_ID     = ••••••••••<br>
+  AWS_SECRET_ACCESS_KEY = ••••••••••<br>
+  AWS_REGION            = ••••••••••
+</div>
+
+<div class="alert alert-warning" style="margin-top: 1rem;">
+  Failles 7-11 (Cloud Security) — pas encore implémentées.
+</div>
+{% endblock %}

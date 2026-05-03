@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Commentaires{% endblock %}
+
+{% block content %}
+<h1>Commentaires</h1>
+
+{% if session.get('username') %}
+<div class="card" style="max-width: 600px;">
+  <form method="POST" action="{{ url_for('comments') }}">
+    <div class="form-group">
+      <label for="content">Ton commentaire</label>
+      <textarea id="content" name="content" placeholder="Écris quelque chose..." required></textarea>
+    </div>
+    <button type="submit">Publier</button>
+  </form>
+</div>
+{% else %}
+<div class="alert alert-warning">
+  <a href="{{ url_for('login') }}">Connecte-toi</a> pour laisser un commentaire.
+</div>
+{% endif %}
+
+<hr class="divider">
+<h2>{{ comments|length }} commentaire(s)</h2>
+
+{% if comments %}
+  {% for c in comments %}
+  <div class="comment">
+    <div class="comment-author">{{ c['author'] }}</div>
+    <div class="comment-meta">{{ c['created_at'] }}</div>
+    <div style="margin-top: 0.4rem;">{{ c['content'] }}</div>
+  </div>
+  {% endfor %}
+{% else %}
+  <p>Aucun commentaire pour l'instant.</p>
+{% endif %}
+{% endblock %}
