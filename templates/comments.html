@@ -28,6 +28,7 @@
   <div class="comment">
     <div class="comment-author">{{ c['author'] }}</div>
     <div class="comment-meta">{{ c['created_at'] }}</div>
+    {# FIX 03 — Jinja2 échappe automatiquement le HTML sans | safe #}
     <div style="margin-top: 0.4rem;">{{ c['content'] }}</div>
   </div>
   {% endfor %}
