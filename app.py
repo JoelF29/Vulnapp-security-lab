@@ -115,6 +115,10 @@ def profile(user_id):
     if 'user_id' not in session:
         flash('Connecte-toi pour accéder aux profils.', 'danger')
         return redirect(url_for('login'))
+    # FIX 04 — IDOR : vérifier que l'utilisateur accède uniquement à son propre profil.
+    if user_id != session['user_id']:
+        flash('Accès refusé — ce profil ne t\'appartient pas.', 'danger')
+        return redirect(url_for('profile', user_id=session['user_id']))
     db = get_db()
     user = db.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
     db.close()
