@@ -170,7 +170,22 @@ def ping():
 def upload():
     message = None
     if request.method == 'POST':
-        message = "[Faille 6 — Upload non filtré pas encore implémentée]"
+        import os
+        from werkzeug.utils import secure_filename
+        file = request.files.get('file')
+        if file and file.filename:
+            # FIX 06 — Whitelist d'extensions + secure_filename()
+            ALLOWED = {'png', 'jpg', 'jpeg', 'gif', 'pdf', 'txt'}
+            ext = file.filename.rsplit('.', 1)[-1].lower()
+            if ext not in ALLOWED:
+                message = f"Extension .{ext} refusée. Autorisées : {', '.join(ALLOWED)}"
+            else:
+                filename = secure_filename(file.filename)
+                filepath = os.path.join('uploads', filename)
+                file.save(filepath)
+                message = f"Fichier uploadé : {filename}"
+        else:
+            message = "Aucun fichier reçu."
     return render_template('upload.html', message=message)
 
 
