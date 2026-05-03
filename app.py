@@ -65,6 +65,8 @@ def login():
         username = request.form['username']
         password = request.form['password']
         db = get_db()
+        # FIX 01 — Requête paramétrée : le ? empêche toute injection SQL.
+        # Le mot de passe est vérifié séparément via check_password_hash.
         user = db.execute(
             'SELECT * FROM users WHERE username = ?', (username,)
         ).fetchone()
