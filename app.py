@@ -201,12 +201,27 @@ def upload():
 
 @app.route('/aws')
 def aws():
-    # Affiche les credentials hardcodés — c'est la faille 07
+    # FIX 08 — Ne jamais afficher les secrets en clair
+    # On masque les credentials et on n'affiche que les infos publiques
     return render_template('aws.html',
-                          access_key=AWS_ACCESS_KEY_ID,
-                          secret_key=AWS_SECRET_ACCESS_KEY,
-                          region=AWS_REGION)
+                          access_key='••••••••••' + AWS_ACCESS_KEY_ID[-4:],
+                          secret_key='••••••••••' + AWS_SECRET_ACCESS_KEY[-4:],
+                          region=AWS_REGION,
+                          masked=True)
 
+
+@app.route('/debug')
+def debug():
+    # FIX 08 — Route de debug supprimée en production
+    # En dev local, on peut la réactiver avec une variable d'env
+    if not os.getenv('DEBUG_MODE'):
+        flash('Route de debug désactivée.', 'danger')
+        return redirect(url_for('home'))
+    import os as os_module
+    # Ne jamais afficher les secrets — filtrer les vars sensibles
+    safe_vars = {k: v for k, v in os_module.environ.items()
+                 if not any(x in k.upper() for x in ['SECRET', 'KEY', 'PASSWORD', 'TOKEN', 'AWS'])}
+    return render_template('debug.html', env_vars=safe_vars)
 
 if __name__ == '__main__':
     init_db()

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Debug — Variables d'environnement{% endblock %}
+
+{% block content %}
+<h1>Page de Debug</h1>
+<p>Variables d'environnement exposées (faille 08).</p>
+
+<div class="alert alert-danger" style="margin-top: 1rem;">
+  ⚠️ Cette page affiche TOUTES les variables d'environnement, y compris les secrets AWS.
+  Elle ne devrait jamais être accessible en production.
+</div>
+
+<div class="card" style="margin-top: 1rem; font-family: monospace; font-size: 0.85rem; max-height: 400px; overflow-y: auto;">
+  {% for key, value in env_vars|dictsort %}
+    {% if 'AWS' in key or 'SECRET' in key or 'KEY' in key %}
+      <div style="background: #742a2a; padding: 0.4rem; margin-bottom: 0.2rem; border-radius: 3px;">
+        <span style="color: #feb2b2;">{{ key }}</span> = <span style="color: #f7fafc;">{{ value }}</span>
+      </div>
+    {% else %}
+      <div style="padding: 0.4rem; margin-bottom: 0.2rem;">
+        <span style="color: #718096;">{{ key }}</span> = <span style="color: #a0aec0;">{{ value }}</span>
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>
+{% endblock %}

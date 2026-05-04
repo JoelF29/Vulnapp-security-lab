@@ -3,16 +3,28 @@
 
 {% block content %}
 <h1>Configuration AWS</h1>
-<p>Informations de connexion au compte AWS (faille 07).</p>
+<p>Informations de connexion au compte AWS.</p>
 
 <div class="card" style="margin-top: 1rem; font-family: monospace; font-size: 0.9rem;">
   <div style="margin-bottom: 0.8rem;">
     <div style="color: #718096; font-size: 0.8rem; text-transform: uppercase;">AWS_ACCESS_KEY_ID</div>
-    <div style="color: #f7fafc; word-break: break-all;">{{ access_key }}</div>
+    <div style="color: #f7fafc; word-break: break-all;">
+      {% if masked %}
+        {{ access_key }}
+      {% else %}
+        {{ access_key }}
+      {% endif %}
+    </div>
   </div>
   <div style="margin-bottom: 0.8rem;">
     <div style="color: #718096; font-size: 0.8rem; text-transform: uppercase;">AWS_SECRET_ACCESS_KEY</div>
-    <div style="color: #f7fafc; word-break: break-all;">{{ secret_key }}</div>
+    <div style="color: #f7fafc; word-break: break-all;">
+      {% if masked %}
+        {{ secret_key }}
+      {% else %}
+        {{ secret_key }}
+      {% endif %}
+    </div>
   </div>
   <div>
     <div style="color: #718096; font-size: 0.8rem; text-transform: uppercase;">AWS_REGION</div>
@@ -20,8 +32,13 @@
   </div>
 </div>
 
-<div class="alert alert-warning" style="margin-top: 1rem;">
-  ⚠️ Ces credentials sont hardcodés dans le code source et exposés sur GitHub.
-  Un attaquant peut y accéder immédiatement et prendre le contrôle de toute l'infra AWS.
-</div>
+{% if masked %}
+  <div class="alert alert-success" style="margin-top: 1rem;">
+    ✓ Les credentials sont masqués (affichage sécurisé).
+  </div>
+{% else %}
+  <div class="alert alert-warning" style="margin-top: 1rem;">
+    ⚠️ Ces credentials sont exposés en clair (faille 08).
+  </div>
+{% endif %}
 {% endblock %}
