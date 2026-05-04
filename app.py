@@ -2,12 +2,22 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 import secrets
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 # FIX 02 — 256 bits d'entropie : impossible à deviner ou bruteforcer.
 app.secret_key = secrets.token_hex(32)
 
 DATABASE = 'database.db'
+
+# FIX 07 — Credentials lus depuis les variables d'environnement (.env ou serveur)
+# Jamais hardcodés dans le code source.
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID', 'NOT_SET')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY', 'NOT_SET')
+AWS_REGION = os.getenv('AWS_REGION', 'eu-west-1')
 
 
 def get_db():
@@ -191,7 +201,11 @@ def upload():
 
 @app.route('/aws')
 def aws():
-    return render_template('aws.html')
+    # Affiche les credentials hardcodés — c'est la faille 07
+    return render_template('aws.html',
+                          access_key=AWS_ACCESS_KEY_ID,
+                          secret_key=AWS_SECRET_ACCESS_KEY,
+                          region=AWS_REGION)
 
 
 if __name__ == '__main__':
