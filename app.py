@@ -3,6 +3,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 import secrets
 import os
+import requests
+from urllib.parse import urlparse
+import ipaddress
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -223,6 +226,53 @@ def debug():
                  if not any(x in k.upper() for x in ['SECRET', 'KEY', 'PASSWORD', 'TOKEN', 'AWS'])}
     return render_template('debug.html', env_vars=safe_vars)
 
+
+@app.route('/internal-api/admin-key')
+def internal_admin_key():
+    # Route "sensible" — normalement inaccessible depuis l'extérieur
+    # Mais accessible via SSRF depuis /fetch
+    return {'admin_key': 'super-secret-api-key-12345'}, 200
+
+
+@app.route('/fetch')
+def fetch_url():
+    # FIX 09 — SSRF protection
+    url = request.args.get('url', '')
+    if not url:
+        return 'Paramètre URL manquant', 400
+
+    try:
+        # Valider l'URL pour éviter les SSRF
+        parsed = urlparse(url)
+        hostname = parsed.hostname
+
+        if not hostname:
+            return 'URL invalide', 400
+
+        # Bloquer les IPs privées/réservées
+        try:
+            ip = ipaddress.ip_address(hostname)
+            # Bloquer localhost, 127.0.0.0/8, 169.254.0.0/16 (metadata AWS), 192.168.0.0/16, 10.0.0.0/8, etc.
+            if ip.is_private or ip.is_loopback or ip.is_link_local:
+                return 'Accès refusé : IP privée/réservée', 403
+        except ValueError:
+            # Pas une IP — c'est un hostname. Résoudre et vérifier
+            import socket
+            try:
+                resolved_ip = socket.gethostbyname(hostname)
+                ip = ipaddress.ip_address(resolved_ip)
+                if ip.is_private or ip.is_loopback or ip.is_link_local:
+                    return 'Accès refusé : domaine privé', 403
+            except socket.gaierror:
+                pass  # Domaine inexistant — requête va échouer normalement
+
+        # Requête sécurisée
+        response = requests.get(url, timeout=5)
+        return f'<pre>{response.text}</pre>', 200, {'Content-Type': 'text/html; charset=utf-8'}
+    except Exception as e:
+        return f'Erreur : {str(e)}', 500
+
 if __name__ == '__main__':
     init_db()
     app.run(debug=True)
+
